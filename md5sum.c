@@ -28,9 +28,9 @@ void checkMD5(const char *sumFile) {
         fprintf(stderr, "ERROR: Cannot open sumfile: %s(%d)\n", strerror(errno), errno);
     }
     
-    fprintf(stderr, "DEBUG: Entering to reading file...\n");
+    /*fprintf(stderr, "DEBUG: Entering to reading file...\n");*/
     while(fgets(line, 1024, fp)) {
-        fprintf(stderr, "DEBUG: line='%s'\n", line);
+        /*fprintf(stderr, "DEBUG: line='%s'\n", line);*/
         lineno++;
         storedMD5 = strtok(line, " ");
         if(storedMD5 == NULL) {
@@ -61,13 +61,18 @@ void checkMD5(const char *sumFile) {
         }
         /* My little chomp() implementations */
         for(b = file; *b != 0; b++) {
-            if(*b == '\n')
+            if(*b == '\n') {
                 *b = 0;
+                break;
+            }
         }
-        /*for(b = storedMD5; *b != 0 && *b != ' '; b++) {
-            *b = 0;
-        }*/
-        fprintf(stderr, "DEBUG: stack: storedMD5='%s', sumFile='%s', file='%s'\n", storedMD5, sumFile, file);
+        for(b = storedMD5; *b != 0; b++) {
+            if(*b == ' ') {
+                *b = 0;
+                break;
+            }
+        }
+        /*fprintf(stderr, "DEBUG: stack: storedMD5='%s', sumFile='%s', file='%s'\n", storedMD5, sumFile, file);*/
         
         md5 = md5sum(file);
         filetotal++;

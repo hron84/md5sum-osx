@@ -30,7 +30,11 @@ char *md5sum(const char *fileName) {
     
     fd = open(fileName, O_RDONLY);
     if(fd < 0) {
-        fprintf(stderr, "ERROR: Unexpected error happened: %s(%d)\n", strerror(errno), errno);
+        if(errno == 2) {
+            fprintf(stderr, "ERROR: %s: File not found\n", fileName);
+        } else {
+            fprintf(stderr, "ERROR: Unexpected error happened: %s(%d)\n", strerror(errno), errno);
+        }
         free(result);
         return NULL;
     }
@@ -46,9 +50,9 @@ char *md5sum(const char *fileName) {
     memset(hexresult, 0, 2*MD5_DIGEST_LENGTH+1);
     
     for(i = 0; i < MD5_DIGEST_LENGTH; i++) {
-        //fprintf(stderr, "DEBUG: h: %02x\n", result[i]);
+        /*fprintf(stderr, "DEBUG: h: %02x\n", result[i]);*/
         snprintf(hbuf, 3, "%02x", result[i]);
-        //fprintf(stderr, "DEBUG: hbuf: %s\n", hbuf);
+        /*fprintf(stderr, "DEBUG: hbuf: %s\n", hbuf);*/
         strncat(hexresult, hbuf, 2);
     }
     free(result);
