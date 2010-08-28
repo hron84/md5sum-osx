@@ -2,9 +2,9 @@
 
 ## Introducion
 
-This is a very simple C project to create and verify md5 sum of files.
+This is a very simple C project to create and verify MD5 and SHA256 checksum of files.
 
-The main thing is it uses same format as Linux md5sum utility, so you can
+The main thing is it uses same format as Linux md5sum/sha256sum utility, so you can
 create and verify checksum files what created with that. 
 
 ## Installation
@@ -16,9 +16,8 @@ create and verify checksum files what created with that.
 
 ## Known limitations
 
-* This utility doesn't handle correctly if the file name contains space 
+* These utilities doesn't handle correctly if the file name contains space 
   in the checksum file (but can create checksum from file with space in its name)
-
 * The parser can handle only file names with length 990 byte (UTF-8 characters counted as **2** byte).
 
 
