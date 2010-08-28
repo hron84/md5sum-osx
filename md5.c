@@ -16,7 +16,7 @@ char *md5sum(const char *fileName) {
     MD5_CTX ctx;
     unsigned char *result = malloc(MD5_DIGEST_LENGTH);
     char *hexresult;
-    char *buf = malloc(BUFSIZE);
+    unsigned char *buf = malloc(BUFSIZE);
     char hbuf[3];
     int fd;
     int rbytes = 0;
