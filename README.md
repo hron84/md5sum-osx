@@ -9,6 +9,9 @@ create and verify checksum files what created with that.
 
 ## Installation
 
+If you trying use this under another OS than Mac OSX, please make sure OpenSSL libs
+and headers are installed. 
+
     git clone git://gihub.com/hron84/md5sum-osx.git
     cd md5sum-osx
     make all
