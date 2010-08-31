@@ -23,8 +23,12 @@ void checkMD5(const char *sumFile) {
     char *file;
     char *b;
     int fileok = 0, fileerr = 0, filetotal = 0, lineno = 0;
-    
-    if(!(fp = fopen(sumFile, "r"))) {
+    if(!strncmp("-", sumFile, 1) || !strncmp("/dev/stdin", sumFile, 10)) {
+		fp = stdin;
+	} else {
+		fp = fopen(sumFile, "r");
+	}
+    if(!fp) {
         fprintf(stderr, "ERROR: Cannot open sumfile: %s(%d)\n", strerror(errno), errno);
     }
     
@@ -94,6 +98,7 @@ int main(int argc, char **argv) {
     int i;
     const char *fileName;
     const char *sumFile;
+	int got_stdin = 0;
     
     struct stat x; /* Not really used */    
     
@@ -111,10 +116,19 @@ int main(int argc, char **argv) {
     } else {
         for(i = 1; i < argc; i++) {
             fileName = argv[i];
-            if(stat(fileName, &x) < 0) {
-                fprintf(stderr, "ERROR: file cannot be opened: %s : %s\n", fileName, strerror(errno));
-                continue;
-            }
+			if(!strncmp("-", fileName, 1) || !strncmp("/dev/stdin", fileName, 10)) {
+				if(got_stdin) {
+					fprintf(stderr, "WARNING: stdin twice in command line, skipping...\n");
+					continue;
+				} else {
+					got_stdin = 1;
+				}
+			} else {
+	            if(stat(fileName, &x) < 0) {
+	                fprintf(stderr, "ERROR: file cannot be opened: %s : %s\n", fileName, strerror(errno));
+	                continue;
+	            }
+			}
             printMD5(fileName);
         }
        

@@ -28,16 +28,21 @@ char *md5sum(const char *fileName) {
     
     MD5_Init(&ctx);
     
-    fd = open(fileName, O_RDONLY);
-    if(fd < 0) {
-        if(errno == 2) {
-            fprintf(stderr, "ERROR: %s: File not found\n", fileName);
-        } else {
-            fprintf(stderr, "ERROR: Unexpected error happened: %s(%d)\n", strerror(errno), errno);
-        }
-        free(result);
-        return NULL;
-    }
+	if(!strncmp("-", fileName, 1) || !strncmp("/dev/stdin", fileName, 10)) {
+		fd = STDIN_FILENO;
+	} else {
+	    fd = open(fileName, O_RDONLY);
+    
+		if(fd < 0) {
+	        if(errno == 2) {
+	            fprintf(stderr, "ERROR: %s: File not found\n", fileName);
+	        } else {
+	            fprintf(stderr, "ERROR: Unexpected error happened: %s(%d)\n", strerror(errno), errno);
+	        }
+	        free(result);
+	        return NULL;
+	    }
+	}
     
     while( (rbytes = read(fd, buf, BUFSIZE) ) > 0) {
         MD5_Update(&ctx, buf, rbytes);

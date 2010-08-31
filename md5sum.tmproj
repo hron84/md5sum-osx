@@ -3,7 +3,52 @@
 <plist version="1.0">
 <dict>
 	<key>documents</key>
-	<array/>
+	<array>
+		<dict>
+			<key>filename</key>
+			<string>md5.h</string>
+			<key>lastUsed</key>
+			<date>2010-08-16T08:34:56Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>md5.c</string>
+			<key>lastUsed</key>
+			<date>2010-08-31T09:15:08Z</date>
+			<key>selected</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>md5sum.c</string>
+			<key>lastUsed</key>
+			<date>2010-08-31T09:15:07Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>Makefile</string>
+			<key>lastUsed</key>
+			<date>2010-08-16T08:34:54Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>README.md</string>
+			<key>lastUsed</key>
+			<date>2010-08-13T11:50:58Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>Makefile.mingw</string>
+			<key>lastUsed</key>
+			<date>2010-08-13T11:53:12Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>ChangeLog.md</string>
+			<key>lastUsed</key>
+			<date>2010-08-31T09:15:05Z</date>
+		</dict>
+	</array>
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>200</integer>
 	<key>metaData</key>
