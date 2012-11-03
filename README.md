@@ -19,8 +19,6 @@ and headers are installed.
 
 ## Known limitations
 
-* These utilities doesn't handle correctly if the file name contains space 
-  in the checksum file (but can create checksum from file with space in its name)
 * The parser can handle only file names with length 990 byte (UTF-8 characters counted as **2** byte).
 
 
