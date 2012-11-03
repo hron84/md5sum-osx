@@ -1,18 +1,24 @@
 CC = gcc
-CFLAGS = -mno-cygwin -O2 -g -ggdb -pipe
-LIBS = -lcrypto 
+CFLAGS = -mwindows -O2 -g -ggdb -pipe
 LDFLAGS = $(CFLAGS)
 
-SOURCES = md5sum.c md5.c
-OBJECTS = ${SOURCES:.c=.o}
+MD5_SOURCES = md5sum.c md5.c util.c
+MD5_OBJECTS = ${SOURCES:.c=.o}
+MD5_LIBS = -lcrypto 
+
+SHA256_SOURCES = sha256sum.c sha256.c util.c
+SHA256_LIBS = -lcrypto
 
 all: md5sum.exe
 
 clean:
 	-rm -f *.o md5sum.exe
 
-md5sum.exe: $(OBJECTS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+md5sum.exe: $(MD5_OBJECTS)
+	$(CC) $(LDFLAGS) -o $@ $(MD5_OBJECTS) $(MD5_LIBS)
+
+sha256sum.exe: $(SHA256_OBJECTS)
+	$(CC) $(LDFLAGS) -o $@ $(SHA256_OBJECTS) $(SHA256_LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) -o $@ -c $<
