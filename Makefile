@@ -1,6 +1,8 @@
 CC = gcc
-CFLAGS = -arch i386 -arch x86_64 -Wall -pedantic -O0 -g -ggdb -gdwarf-2 -pipe
+DSYMUTIL = dsymutil
+CFLAGS = -arch i386 -arch x86_64 -Wall -pedantic -pipe
 LDFLAGS = $(CFLAGS)
+DEBUG = no
 
 UNAME := $(shell uname)
 
@@ -20,6 +22,11 @@ endif
 
 SHA256_OBJECTS = ${SHA256_SOURCES:.c=.o}
 
+ifeq ($(DEBUG),yes)
+CFLAGS += -O0 -g -ggdb -gdwarf-2
+else
+CFLAGS += -O2
+endif
 
 all: md5sum sha256sum
 
@@ -31,9 +38,15 @@ tests:
 
 md5sum: $(MD5_OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $(MD5_OBJECTS) $(MD5_LIBS)
+ifeq ($(DEBUG),yes)
+	$(DSYMUTIL) $@
+endif
 
 sha256sum: $(SHA256_OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $(SHA256_OBJECTS) $(SHA256_LIBS)
+ifeq ($(DEBUG),yes)
+	$(DSYMUTIL) $@
+endif
 
 .c.o:
 	$(CC) $(CFLAGS) -o $@ -c $<
