@@ -31,8 +31,11 @@ int checkMD5(const char *sumFile) {
 	} else {
 		fp = fopen(sumFile, "r");
 	}
+
     if(!fp) {
         fprintf(stderr, "ERROR: Cannot open sumfile: %s(%d)\n", strerror(errno), errno);
+        free(filebuf);
+        return 1;
     }
     
     /*fprintf(stderr, "DEBUG: Entering to reading file...\n");*/
