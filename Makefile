@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -arch i386 -arch x86_64 -arch ppc -arch ppc64 -Wall -pedantic -O2 -g -ggdb -pipe
+CFLAGS = -arch i386 -arch x86_64 -Wall -pedantic -O0 -g -ggdb -gdwarf-2 -pipe
 LDFLAGS = $(CFLAGS)
 
 UNAME := $(shell uname)
