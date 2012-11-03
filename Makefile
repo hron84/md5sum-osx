@@ -4,12 +4,12 @@ LDFLAGS = $(CFLAGS)
 
 UNAME := $(shell uname)
 
-MD5_SOURCES = md5sum.c md5.c
+MD5_SOURCES = md5sum.c md5.c util.c
 MD5_OBJECTS = ${MD5_SOURCES:.c=.o}
 MD5_LIBS = -lcrypto
 
 
-SHA256_SOURCES = sha256sum.c sha256.c
+SHA256_SOURCES = sha256sum.c sha256.c util.c
 SHA256_LIBS = -lcrypto
 
 ifeq ($(UNAME),Darwin)

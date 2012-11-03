@@ -5,24 +5,27 @@
 #include <sys/stat.h>
 
 #include "sha256.h"
+#include "util.h"
 
 int printSHA256(const char *fileName) {
     char *sha256 = sha256sum(fileName);
     if(sha256) {
-    printf("%s  %s\n", sha256, fileName);
-    return 1;
+        printf("%s  %s\n", sha256, fileName);
+        return 1;
     } else {
         return 0;
     }
 }
 
-void checkSHA256(const char *sumFile) {
+int checkSHA256(const char *sumFile) {
     FILE *fp;
     char *line = malloc(1024);
     char *sha256, *storedSHA256;
-    char *file;
+    char *file = malloc(FILENAME_MAX);
     char *b;
+    
     int fileok = 0, fileerr = 0, filetotal = 0, lineno = 0;
+    
     if(!strncmp("-", sumFile, 1) || !strncmp("/dev/stdin", sumFile, 10)) {
 		fp = stdin;
 	} else {
@@ -44,43 +47,60 @@ void checkSHA256(const char *sumFile) {
         if(!strncmp("#", storedSHA256, 1)) {
             continue;
         }
-        file = strtok(NULL, " ");
-        if(!strncmp(" ", file, 1)) {
-            /* Maybe a broken strtok... */
-            fprintf(stderr, "WARNING: a broken strtok...");
-            file = strtok(NULL, " ");
-            if(!strncmp(" ", file, 1)) {
-                /* We got a separator again, something is not so good... */
-                fprintf(stderr, "ERROR: something went to totally wrong, crashing...\n");
-                fprintf(stderr, "DEBUG: stack: storedSHA256='%s', sumFile='%s', line='%s'\n", storedSHA256, sumFile, line);
-                free(line);
-                return;
-            }
+        // file = strtok(NULL, " ");
+        // if(!strncmp(" ", file, 1)) {
+        //     /* Maybe a broken strtok... */
+        //     fprintf(stderr, "WARNING: a broken strtok...");
+        //     file = strtok(NULL, " ");
+        //     if(!strncmp(" ", file, 1)) {
+        //         /* We got a separator again, something is not so good... */
+        //         fprintf(stderr, "ERROR: something went to totally wrong, crashing...\n");
+        //         fprintf(stderr, "DEBUG: stack: storedSHA256='%s', sumFile='%s', line='%s'\n", storedSHA256, sumFile, line);
+        //         free(line);
+        //         return;
+        //     }
+        // }
+        memset(file, 0, FILENAME_MAX);
+        //b = strtok(NULL, " ");    
+        
+        while((b = strtok(NULL, " ")) != NULL) {            
+            strncat(file, " ", 2);
+            strncat(file, b, strlen(b) + 1);
         }
         
-        if(!file || !strncmp("\n", file, 1)) {
+        /* We remove space and asterisk from beginning of string */
+        ltrim(&file, ' ');
+        ltrim(&file, '*');
+        
+        chomp(file);
+        
+        if(!file || strlen(file) < 1) {
             fprintf(stderr, "WARNING: invalid formatted line given at %s:%d\n", sumFile, lineno);
             fprintf(stderr, "WARNING: but keep going...");
             continue;
         }
+        
         /* My little chomp() implementations */
-        for(b = file; *b != 0; b++) {
-            if(*b == '\n') {
-                *b = 0;
-                break;
-            }
-        }
-        for(b = storedSHA256; *b != 0; b++) {
-            if(*b == ' ') {
-                *b = 0;
-                break;
-            }
-        }
-        /*fprintf(stderr, "DEBUG: stack: storedSHA256='%s', sumFile='%s', file='%s'\n", storedSHA256, sumFile, file);*/
+        // for(b = file; *b != 0; b++) {
+        //     if(*b == '\n') {
+        //         *b = 0;
+        //         break;
+        //     }
+        // }
+        // 
+        // for(b = storedSHA256; *b != 0; b++) {
+        //     if(*b == ' ') {
+        //         *b = 0;
+        //         break;
+        //     }
+        // }
+        
+        chomp(storedSHA256);
+        chop(storedSHA256, ' ');
         
         sha256 = sha256sum(file);
         filetotal++;
-        
+                
         if(!sha256 || strncmp(sha256, storedSHA256, 32)) {
             fileerr++;
             printf("%s: FAILED\n", file);
@@ -89,13 +109,17 @@ void checkSHA256(const char *sumFile) {
             printf("%s: OK\n", file);
         }
     }
+    
     if(fileerr > 0) {
         printf("WARNING: %d of %d did NOT match\n", fileerr, filetotal);
+        return 1;
+    } else {
+        return 0;
     }
 }
 
 int main(int argc, char **argv) {
-    int i;
+    int i, ret;
     const char *fileName;
     const char *sumFile;
 	int got_stdin = 0;
@@ -111,14 +135,15 @@ int main(int argc, char **argv) {
         sumFile = argv[2];
         argc -= 2;
         argv +=2;
-        checkSHA256(sumFile);
+        ret = checkSHA256(sumFile);
     
     } else {
-       for(i = 1; i < argc; i++) {
+        for(i = 1; i < argc; i++) {
             fileName = argv[i];
 			if(!strncmp("-", fileName, 1) || !strncmp("/dev/stdin", fileName, 10)) {
 				if(got_stdin) {
 					fprintf(stderr, "WARNING: stdin twice in command line, skipping...\n");
+                    fflush(stderr);
 					continue;
 				} else {
 					got_stdin = 1;
@@ -126,12 +151,13 @@ int main(int argc, char **argv) {
 			} else {
 	            if(stat(fileName, &x) < 0) {
 	                fprintf(stderr, "ERROR: file cannot be opened: %s : %s\n", fileName, strerror(errno));
+	                fflush(stderr);
 	                continue;
 	            }
 			}
-            printSHA256(fileName);
+            ret = printSHA256(fileName);
         }
        
     }
-    return 0; 
+    return ret; 
 }
