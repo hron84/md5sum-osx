@@ -19,7 +19,7 @@ int printMD5(const char *fileName) {
 
 int checkMD5(const char *sumFile) {
     FILE *fp;
-    char *line = malloc(1024);
+    char line[1024];
     char *md5, *storedMD5;
     char *file = malloc(FILENAME_MAX), *filebuf = file;
     char *b;
@@ -80,6 +80,7 @@ int checkMD5(const char *sumFile) {
             fileok++;
             printf("%s: OK\n", file);
         }
+        free(md5);
     }
     
     free(filebuf);

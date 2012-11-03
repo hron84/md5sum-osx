@@ -19,7 +19,7 @@ int printSHA256(const char *fileName) {
 
 int checkSHA256(const char *sumFile) {
     FILE *fp;
-    char *line = malloc(1024);
+    char line[1024];
     char *sha256, *storedSHA256;
     char *file = malloc(FILENAME_MAX), *filebuf = file;
     char *b;
@@ -80,6 +80,7 @@ int checkSHA256(const char *sumFile) {
             fileok++;
             printf("%s: OK\n", file);
         }
+        free(sha256);
     }
     
     free(filebuf);

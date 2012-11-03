@@ -60,6 +60,8 @@ char *md5sum(const char *fileName) {
         /*fprintf(stderr, "DEBUG: hbuf: %s\n", hbuf);*/
         strncat(hexresult, hbuf, 2);
     }
+
     free(result);
+    free(buf);
     return hexresult;
 }

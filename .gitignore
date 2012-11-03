@@ -1,3 +1,4 @@
 *.o
 md5sum
 sha256sum
+*.dSYM
