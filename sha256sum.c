@@ -6,6 +6,9 @@
 
 #include "sha256.h"
 #include "util.h"
+#include "version.h"
+
+#define PROGRAM_NAME "sha256sum"
 
 int printSHA256(const char *fileName) {
     char *sha256 = sha256sum(fileName);
@@ -96,6 +99,19 @@ int checkSHA256(const char *sumFile) {
     }
 }
 
+void printBanner() {
+    printf("%s for OS X %s\n", PROGRAM_NAME, PROGRAM_VERSION);
+    printf("Copyright (c) 2010-2012 Gabor Garami. Some rights reserved.\n");
+}
+
+void printUsage() {
+    printBanner();
+    printf("\n");
+    printf("Usage: %s file1 file2\n", PROGRAM_NAME);
+    printf("       %s -c sumfile\n", PROGRAM_NAME);
+}
+ 
+
 int main(int argc, char **argv) {
     int i, ret;
     const char *fileName;
@@ -105,11 +121,16 @@ int main(int argc, char **argv) {
     struct stat x; /* Not really used */    
     
     if(argc < 2 || !strncmp("--help", argv[1], 6)) {
-        printf("Usage: %s file1 file2\n", argv[0]);
-        printf("       %s -c sumfile\n", argv[0]);
+        printUsage();
         return 1;
     }
-    if(!strncmp("-c", argv[1],2)) {
+    
+    if(!strncmp("-v", argv[1], 2) || !strncmp("--version", argv[1], 9)) {
+        printBanner();
+        return 0;
+    }
+    
+    if(!strncmp("-c", argv[1], 2)) {
         sumFile = argv[2];
         argc -= 2;
         argv +=2;
