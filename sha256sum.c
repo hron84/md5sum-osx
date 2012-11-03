@@ -21,7 +21,7 @@ int checkSHA256(const char *sumFile) {
     FILE *fp;
     char *line = malloc(1024);
     char *sha256, *storedSHA256;
-    char *file = malloc(FILENAME_MAX);
+    char *file = malloc(FILENAME_MAX), *filebuf = file;
     char *b;
     
     int fileok = 0, fileerr = 0, filetotal = 0, lineno = 0;
@@ -47,21 +47,8 @@ int checkSHA256(const char *sumFile) {
         if(!strncmp("#", storedSHA256, 1)) {
             continue;
         }
-        // file = strtok(NULL, " ");
-        // if(!strncmp(" ", file, 1)) {
-        //     /* Maybe a broken strtok... */
-        //     fprintf(stderr, "WARNING: a broken strtok...");
-        //     file = strtok(NULL, " ");
-        //     if(!strncmp(" ", file, 1)) {
-        //         /* We got a separator again, something is not so good... */
-        //         fprintf(stderr, "ERROR: something went to totally wrong, crashing...\n");
-        //         fprintf(stderr, "DEBUG: stack: storedSHA256='%s', sumFile='%s', line='%s'\n", storedSHA256, sumFile, line);
-        //         free(line);
-        //         return;
-        //     }
-        // }
+
         memset(file, 0, FILENAME_MAX);
-        //b = strtok(NULL, " ");    
         
         while((b = strtok(NULL, " ")) != NULL) {            
             strncat(file, " ", 2);
@@ -80,21 +67,6 @@ int checkSHA256(const char *sumFile) {
             continue;
         }
         
-        /* My little chomp() implementations */
-        // for(b = file; *b != 0; b++) {
-        //     if(*b == '\n') {
-        //         *b = 0;
-        //         break;
-        //     }
-        // }
-        // 
-        // for(b = storedSHA256; *b != 0; b++) {
-        //     if(*b == ' ') {
-        //         *b = 0;
-        //         break;
-        //     }
-        // }
-        
         chomp(storedSHA256);
         chop(storedSHA256, ' ');
         
@@ -109,6 +81,8 @@ int checkSHA256(const char *sumFile) {
             printf("%s: OK\n", file);
         }
     }
+    
+    free(filebuf);
     
     if(fileerr > 0) {
         printf("WARNING: %d of %d did NOT match\n", fileerr, filetotal);
