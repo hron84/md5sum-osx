@@ -31,7 +31,7 @@ endif
 all: md5sum sha256sum
 
 clean:
-	-rm -f *.o md5sum sha256sum external/*.o
+	-rm -rf *.o md5sum sha256sum external/*.o *.dSYM
 
 tests:
 	sh test/test.sh
