@@ -1,6 +1,3 @@
-SET(DROP_METHOD "ftp")
-SET(DROP_SITE "orion.railwayhosting.hu")
+SET(DROP_METHOD "http")
+SET(DROP_SITE "tom.railwayhosting.hu")
 SET(DROP_LOCATION "/ctest/")
-SET(DROP_SITE_USER "hron")
-SET(DROP_SITE_PASSWORD "Ap320130")
-SET(TRIGGER_SITE "http://orion.railwayhosting.hu/~hron/info.php")
