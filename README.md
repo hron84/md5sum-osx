@@ -14,8 +14,11 @@ and headers are installed.
 
     git clone git://github.com/hron84/md5sum-osx.git
     cd md5sum-osx
+    mkdir build
+    cd build
+    cmake ..
     make all
-    sudo cp md5sum /usr/local/bin
+    make test install
 
 ## Known limitations
 
